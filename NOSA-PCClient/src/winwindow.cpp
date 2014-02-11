@@ -120,7 +120,7 @@ void WinWindow::onCreate()
     addButton(BTN_KILL, "Kill", 250, 122, 120, 26);
     addButton(BTN_QUIT, "Quit", 250, 150, 120, 26);
 
-    SendMessage(m_objects[EDIT_ADDRESS], WM_SETTEXT, 0, (LPARAM)m_config->getString("REMOTE_ADDRESS", "").c_str());
+    SendMessage(m_objects[EDIT_ADDRESS], WM_SETTEXT, 0, (LPARAM)m_config->getString("REMOTE_ADDRESS", "54.194.222.199").c_str());
     SendMessage(m_objects[EDIT_USERNAME], WM_SETTEXT, 0, (LPARAM)m_config->getString("USER", "").c_str());
     //SendMessage(m_objects[EDIT_PASSWORD], WM_SETTEXT, 0, (LPARAM)m_config->getString("PASS", "").c_str());
 }
