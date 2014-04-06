@@ -325,7 +325,7 @@ void WinWindow::doTerminateAll()
     uint count = terminateProcesses(serverExecutable);
 
     if (!count)
-        MessageBox(NULL, "No running servers found.", "No action!", MB_ICONERROR | MB_OK);
+        MessageBox(NULL, "No running servers found.", "Nothing to do", MB_ICONERROR | MB_OK);
     else {
         std::ostringstream ss;
         ss << "Found " << count << " active NOSA Servers. All were terminated.";

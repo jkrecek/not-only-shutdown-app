@@ -76,10 +76,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
         outbuf ob;
         std::streambuf *sb = std::cout.rdbuf(&ob);
 
-        std::cout << ".." << lpCmdLine << std::endl;
-
-        std::cout << ".." << sv.size() << std::endl;
-
         int result = doWork();
 
         std::cout.rdbuf(sb);
