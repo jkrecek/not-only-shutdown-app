@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <string.h>
 
 URLHandler::URLHandler()
 {
