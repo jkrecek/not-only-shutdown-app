@@ -58,7 +58,7 @@ int RemoteCore::run()
         }
         else
         {
-            soPa.respond("CONNECTED");
+            soPa.respond("CONNECTED", false);
         }
 
         sConnections.insert(connection);
