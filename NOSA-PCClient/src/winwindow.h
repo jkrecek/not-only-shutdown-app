@@ -51,10 +51,10 @@ private:
 
     const char* checkValues();
 
-    std::string getExecutablePath(bool asService);
+    std::string getExecutablePath();
 
     const char* getText(Field field);
-    bool startProgram(std::string executable);
+    bool startProgram(std::string executable, std::string parameter);
 
     int processCount(const char* executable);
     uint terminateProcesses(const char* executable);

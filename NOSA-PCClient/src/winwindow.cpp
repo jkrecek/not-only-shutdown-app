@@ -205,10 +205,14 @@ void WinWindow::doRun(bool asService)
         return;
     }
 
-    std::string runPath = getExecutablePath(asService);
+    std::string runPath = getExecutablePath();
     if (runPath != "")
     {
-        if (startProgram(runPath))
+        std::string parameter;
+        if (asService)
+            parameter = "-m";
+
+        if (startProgram(runPath, parameter))
         {
             if (asService)
                 MessageBox(NULL, "Server successfully started.", "Success",  MB_ICONINFORMATION | MB_OK);
@@ -218,7 +222,7 @@ void WinWindow::doRun(bool asService)
 
 void WinWindow::doRunOnStart()
 {
-    std::string runPath = getExecutablePath(true);
+    std::string runPath = "\"" + getExecutablePath() + "\" -m";
 
     Helper::request_privileges(SE_TAKE_OWNERSHIP_NAME);
 
@@ -247,25 +251,8 @@ const char* WinWindow::getText(Field field)
     return strdup(buffer);
 }
 
-std::string WinWindow::getExecutablePath(bool asService)
+std::string WinWindow::getExecutablePath()
 {
-    std::string hstart = Helper::getPathToFile("hstart.exe");
-
-    std::string path;
-
-    if (asService)
-    {
-        if (!Helper::file_exists(hstart))
-        {
-            MessageBox(NULL, "Please place file hstart.exe to application directory.", "Error!",  MB_ICONERROR | MB_OK);
-            return "";
-        }
-
-        path = "\"" + hstart + "\" /NOCONSOLE ";
-    }
-    else
-        path = "";
-
     std::string server = Helper::getPathToFile(serverExecutable);
     if (!Helper::file_exists(server))
     {
@@ -273,31 +260,12 @@ std::string WinWindow::getExecutablePath(bool asService)
         return "";
     }
 
-    path += "\"" + server + "\"";
-
-    return path.c_str();
+    return server.c_str();
 }
 
-bool WinWindow::startProgram(std::string executable)
+bool WinWindow::startProgram(std::string executable, std::string parameter)
 {
-    const char* fullExe = executable.c_str();;
-
-    char* nextChar = (char*)memchr(fullExe + 1 , '\"', executable.length());
-    int findLen = (int)nextChar - (int)fullExe - 1;
-    char* file = (char*)malloc(findLen + 1);
-    memcpy(file, fullExe + 1, findLen);
-    file[findLen] = '\0';
-
-    char* parameter = NULL;
-    if (*(nextChar + 1) != '\0')
-    {
-        int restLen = executable.length() - findLen;
-        parameter = (char*)malloc(restLen + 1);
-        memcpy(parameter, nextChar + 1, restLen-2);
-        parameter[restLen-2] = '\0';
-    }
-
-    HINSTANCE hRet = ShellExecute(NULL, "open", file, parameter, NULL, SW_SHOW);
+    HINSTANCE hRet = ShellExecute(NULL, "open", executable.c_str(), parameter.c_str(), NULL, SW_SHOW);
 
     if ((LONG)hRet <= 32)
     {

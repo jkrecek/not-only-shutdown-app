@@ -49,24 +49,42 @@ public:
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int cmdShow)
 {
-    if(AllocConsole())
+    StringVector sv = Helper::split(lpCmdLine, '-');
+    bool minimized = false;
+    for (StringVector::iterator itr = sv.begin(); itr != sv.end(); ++ itr)
     {
-        freopen("CONOUT$", "w", stdout);
-        SetConsoleTitle(SERVER_APP_NAME);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
+        if (*itr == "minimized" || *itr == "m")
+        {
+            minimized = true;
+            break;
+        }
     }
 
-    outbuf ob;
-    std::streambuf *sb = std::cout.rdbuf(&ob);
+    if (minimized)
+    {
+        return doWork();
+    }
+    else
+    {
+        if(AllocConsole())
+        {
+            freopen("CONOUT$", "w", stdout);
+            SetConsoleTitle(SERVER_APP_NAME);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
+        }
 
-    std::cout << lpCmdLine << std::endl;
-    StringVector sv = Helper::split(lpCmdLine, '-');
-    std::cout << sv.size() << std::endl;
+        outbuf ob;
+        std::streambuf *sb = std::cout.rdbuf(&ob);
 
-    int result = doWork();
+        std::cout << ".." << lpCmdLine << std::endl;
 
-    std::cout.rdbuf(sb);
-    return result;
+        std::cout << ".." << sv.size() << std::endl;
+
+        int result = doWork();
+
+        std::cout.rdbuf(sb);
+        return result;
+    }
 }
 #else
 int main()
